@@ -58,7 +58,7 @@ function scormadaptivequiz($USER, $course, $scormid, $uniqueid) {
 	//スキップ対象全SCOリストデータ
 	$allSkipableScoid ="";
 	foreach ($scormadaptivequiz_scoes as $value) {
-		$allSkipableScoid .= '"'.$value->scoidentifier.'",';
+		$allSkipableScoid .= "'{$value->scoidentifier}',";
 		$scoscore[$value->scoidentifier] = $value->passvalue;
 	}
 	$allSkipableScoid = substr($allSkipableScoid, 0, -1); 	
@@ -75,8 +75,9 @@ function scormadaptivequiz($USER, $course, $scormid, $uniqueid) {
 	 JOIN {question_categories} cc ON qq.category = cc.id 
 	 JOIN {scorm_scoes} ss ON ss.identifier = cc.name 
 	 WHERE qq.id IN 
-	 ( SELECT aa.questionid FROM {question_attempts} aa 
-		WHERE aa.questionusageid =:questionusageid AND aa.rightanswer=aa.responsesummary)',array('questionusageid'=>$uniqueid));
+        ( SELECT aa.questionid FROM {question_attempts} aa 
+           WHERE aa.questionusageid =:questionusageid AND aa.rightanswer=aa.responsesummary)
+        AND ss.scorm =:scormid',array('questionusageid'=>$uniqueid, 'scormid' => $scormid));
 
 	//全問題のリスト $quiz_attempts->uniqueidはクイズ&Userにユニーク
 	$scoAllList = $DB->get_records_sql(
@@ -85,9 +86,10 @@ function scormadaptivequiz($USER, $course, $scormid, $uniqueid) {
 	 JOIN {question_categories} cc ON qq.category = cc.id 
 	 JOIN {scorm_scoes} ss ON ss.identifier = cc.name 
 	 WHERE qq.id IN 
-	 ( SELECT aa.questionid FROM {question_attempts} aa 
-		WHERE aa.questionusageid =:questionusageid)',array('questionusageid'=>$uniqueid));
-
+        ( SELECT aa.questionid FROM {question_attempts} aa 
+           WHERE aa.questionusageid =:questionusageid) 
+        AND ss.scorm =:scormid',array('questionusageid'=>$uniqueid, 'scormid' => $scormid))
+        ;
 //	echo var_dump($allSkipableScoList);	
 //	echo '===============================================<br />';
 //	echo var_dump($scoTrueList);		

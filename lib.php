@@ -103,7 +103,7 @@ function scormadaptivequiz_add_instance(stdClass $scormadaptivequiz, mod_scormad
 			$questionid ="";
 			$quiz_slots = $DB->get_records('quiz_slots', array('quizid'=>$scormadaptivequiz->quiz));
 			foreach ($quiz_slots as $value) {
-				$questionid .= '"'.$value->questionid.'",';
+                $questionid .= "{$value->questionid},";
 			}
 			$questionid = substr($questionid, 0, -1);
 		}else{
@@ -122,11 +122,11 @@ function scormadaptivequiz_add_instance(stdClass $scormadaptivequiz, mod_scormad
 //	}
 	
 	$allSkipableScoList = $DB->get_records_sql(
-	'SELECT qc.name , ss.title
+	'SELECT DISTINCT qc.name , ss.title
 		FROM {question} qq 
 		JOIN {question_categories} qc ON qq.category = qc.id
 		JOIN {scorm_scoes} ss ON ss.identifier = qc.name 
-		where qq.id in ('.$questionid.') and ss.scorm = '.$scormadaptivequiz->scorm.' group by qc.id;');
+		where qq.id in ('.$questionid.') and ss.scorm = '.$scormadaptivequiz->scorm.';');
 	$record = new stdClass();
 	foreach ($allSkipableScoList as $value) {
 		$record->scormadaptivequiz = $scormadaptivequiz->id;

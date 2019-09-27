@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_scormadaptivequiz';
-$plugin->version = 20160224;
-$plugin->release = 'v1.0';
+$plugin->version = 2019061200;
+$plugin->release = 'v2.0';
 $plugin->requires = 2013111800;
 $plugin->maturity = MATURITY_RC;
 $plugin->cron = 0;
